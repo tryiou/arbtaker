@@ -2,8 +2,8 @@ import datetime
 import os
 import time
 
-if not os.path.isdir('../logs'):
-    os.mkdir('../logs')
+if not os.path.isdir('logs'):
+    os.mkdir('logs')
 import ws_client
 import definitions.ccxt_funcs_def as ccxt
 import arbtaker_settings as settings
@@ -598,7 +598,7 @@ def dx_set_addresses(coins_list):
 
 
 def dx_settings_save_new_address(coin):
-    filename = "utils/settings.py"
+    filename = "arbtaker_settings.py"
     with open(filename, "r") as fileread:
         file = fileread.readlines()
         if "dx_addresses[\'" + coin.name + "\']" not in file:
