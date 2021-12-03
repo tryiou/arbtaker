@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+utils/keys.local.json
+arbtaker_settings.py
