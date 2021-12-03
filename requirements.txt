@@ -2,4 +2,3 @@ requests
 Flask
 python-dateutil
 ccxt
-websockets
