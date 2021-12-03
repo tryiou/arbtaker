@@ -816,7 +816,7 @@ def main_arb_taker_dx_ccxt():
     flush_cancelled_delay = 60 * 15
     flush_cancelled_timer = time.time()
     xb.dx_call_dxflushcancelledorders()
-    ccxt_cex = ccxt.init_ccxt_instance(exchange="bittrex", hostname="global.bittrex.com")
+    ccxt_cex = ccxt.init_ccxt_instance(exchange=settings.ccxt_exchange_name, hostname=settings.ccxt_exchange_hostname)
     coins_list = main_init_coins_list()
     dx_set_addresses(coins_list)
     while 1:

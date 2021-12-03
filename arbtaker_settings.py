@@ -3,6 +3,8 @@ rpc_user = "rpc_user"
 rpc_password = "rpc_pass"
 rpc_port = 41414
 
+ccxt_exchange_name = "bittrex"
+ccxt_exchange_hostname = "global.bittrex.com"  # SET TO None TO USE CCXT DEFAULT
 # BOT LOGIC:
 # BOT GATHER XB/CEX BALANCES AND SCAN ANY POSSIBLE XB ORDERBOOKS THEN SEARCH CEX EQUIVALENCE FOR PROFITABLE TRADES,
 # EXECUTE TRADES ON EACH PLATFORM IF ENOUGH BALANCES OF EACH INVOLVED COINS IS SUFFICIENT
@@ -24,4 +26,3 @@ error_rate_mod = 0.0001
 
 # BOT WILL REQUEST NEW ADDRESS IF MISSING AND ADD HERE, DONT CHANGE SYNTAX FROM HERE
 dx_addresses = {}
-
