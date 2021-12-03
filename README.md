@@ -3,7 +3,7 @@ arbtaker trading bot for blocknet xbridge / ccxt supported exchanges
 
 logic:  
 bot will scan xbridge tokens & balance and possible orderbooks,    
-then calculate CEX tokens path and orderbooks,  
+then calculate ccxt exchange tokens path and orderbooks,  
 compare to find profitable trades,  
 execute on each platform if sufficient balances on each side.  
 
