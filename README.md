@@ -15,6 +15,8 @@ open `arbtaker_settings.py` with text editor:
 -Set correct rpc_user, rpc_password, rpc_port, corresponding to your blocknet core wallet.  
 -dry_mode to True won't execute trade in real, just execute logic and console/logging.  
 -dry_mode to False will execute trade in real.  
+-Set ccxt_exchange_name to desired exchange, supported exchange list can be found on
+`https://github.com/ccxt/ccxt/`
 -Bot will gather new xbridge addresses at first run.  
 
 open `utils/keys.local.json` with text editor:  
