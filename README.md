@@ -10,12 +10,14 @@ execute on each platform if sufficient balances on each side.
 installation:  
 `git clone https://github.com/tryiou/arbtaker.git`  
 `cd arbtaker`  
-open `arbtaker_settings.py` with text editor  
+`pip3 install -r requirements.txt`  
+open `arbtaker_settings.py` with text editor:  
 -Set correct rpc_user, rpc_password, rpc_port, corresponding to your blocknet core wallet.  
 -dry_mode to True won't execute trade in real, just execute logic and console/logging.  
 -dry_mode to False will execute trade in real.  
 -Bot will gather new xbridge addresses at first run.  
--open `utils/keys.local.json` with text editor  
+
+open `utils/keys.local.json` with text editor:  
 -Set your active ccxt exchange name / api_key / api_secret  
 
 start:  
