@@ -17,5 +17,6 @@ open `arbtaker_settings.py` with text editor
 -Bot will gather new xbridge addresses at first run.  
 -open `utils/keys.local.json` with text editor
 -Set your active exchange name / api_key / api_secret  
+
 start:  
 python3 main.py  
