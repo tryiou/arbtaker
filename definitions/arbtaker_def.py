@@ -856,7 +856,7 @@ def main_arb_taker_dx_ccxt():
                         print("SUCCESS!")
                         time.sleep(5)
             print()
-        while time.time() - main_timer < 20:
+        while time.time() - main_timer < settings.time_per_loop:
             print("*", end='')
             time.sleep(1)
         print("*")
