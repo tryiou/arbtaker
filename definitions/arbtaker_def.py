@@ -4,7 +4,6 @@ import time
 
 if not os.path.isdir('logs'):
     os.mkdir('logs')
-import ws_client
 import definitions.ccxt_funcs_def as ccxt
 import arbtaker_settings as settings
 import definitions.xbridge_funcs_def as xb
@@ -110,20 +109,12 @@ class Coin:
 
     def cex_update_orderbook(self, ccxt_o=None):
         # side s1 s2
-        if use_ws:
-            last_ob = self.cex.orderbook
-            self.cex.orderbook = ws_client.asyncio.get_event_loop().run_until_complete(
-                ws_client.ws_get_ob(self.name + '/BTC'))
-            self.cex.orderbook_timer = time.time()
-            if last_ob == self.cex.orderbook:
+        update_delay = 3
+        if 'BTC' not in self.name and ccxt_o is not None:
+            if self.cex.orderbook_timer is None or time.time() - self.cex.orderbook_timer > update_delay:
+                self.cex.orderbook = ccxt.ccxt_call_fetch_order_book(self.name + '/BTC', ccxt_o)
+                self.cex.orderbook_timer = time.time()
                 print("updated", self.name + "/BTC cex orderbook")
-        else:
-            update_delay = 3
-            if 'BTC' not in self.name and ccxt_o is not None:
-                if self.cex.orderbook_timer is None or time.time() - self.cex.orderbook_timer > update_delay:
-                    self.cex.orderbook = ccxt.ccxt_call_fetch_order_book(self.name + '/BTC', ccxt_o)
-                    self.cex.orderbook_timer = time.time()
-                    print("updated", self.name + "/BTC cex orderbook")
 
 
 class Cex:
@@ -211,10 +202,7 @@ def update_balances_dx(coins_list):
 
 
 def update_balances_cex(coins_list, ccxt_instance):
-    if use_ws:
-        cex_bals = ws_client.asyncio.get_event_loop().run_until_complete(ws_client.ws_get_bal())
-    else:
-        cex_bals = ccxt.ccxt_call_fetch_free_balance(ccxt_instance)
+    cex_bals = ccxt.ccxt_call_fetch_free_balance(ccxt_instance)
     for coin in coins_list:
         if coin.name in cex_bals:
             coin.cex.set_balance(float(cex_bals[coin.name]))
@@ -809,9 +797,6 @@ def reset_order_side(maker_o, taker_o):
 
 
 def main_arb_taker_dx_ccxt():
-    global use_ws
-    use_ws = ws_client.is_port_in_use(6666)
-    print('use ws:', use_ws)
     count = 0
     flush_cancelled_delay = 60 * 15
     flush_cancelled_timer = time.time()
