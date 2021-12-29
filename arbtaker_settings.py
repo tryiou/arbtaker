@@ -16,9 +16,9 @@ min_profit = 1.075  # 1.0=100% # MINIMUM % PROFIT TO TRIGGER
 time_per_loop = 20 # SECONDS SLEEPING BETWEEN EACH BOT LOOP
 error_rate_mod = 0.0001
 
-# MAX SIZE IN COIN ASSET PER ORDER
+# MAX SIZE IN COIN ASSET PER ORDER / FACULTATIVE
 max_size = {}
-max_size['BLOCK'] = 20
+max_size['BLOCK'] = 200
 max_size['BTC'] = 0.01
 max_size['LTC'] = 5
 
