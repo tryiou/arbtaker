@@ -429,7 +429,8 @@ def calc_arb_direct(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if balance_check('s1', maker_o, taker_o, btc_o):
+            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and \
+                    balance_check('s1', maker_o, taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 profit_percent = maker_o.cex.executed_tobtc_s1 / maker_o.dex.taker_amount  # 1=100%
                 msg3_pr = f"{'':<12}PROFIT : {'{:.8f}'.format(maker_o.cex.executed_tobtc_s1):<10} - {'{:.8f}'.format(maker_o.dex.taker_amount):<10} = {'{:.8f}'.format(maker_o.cex.executed_tobtc_s1 - maker_o.dex.taker_amount):<10} = {'{:.2f}'.format(profit_percent * 100 - 100)} %"
@@ -463,7 +464,7 @@ def calc_arb_direct(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if balance_check('s1', maker_o, taker_o, btc_o):
+            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and balance_check('s1', maker_o, taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 profit_percent = maker_o.dex.taker_amount / maker_o.cex.executed_tobtc_s1
                 msg1_dx = f"{' ' * 10}{'Xbridge(' + maker_o.name + '/' + taker_o.name + ')':<19}: {'SELL':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'BUY':<5}{'{:.8f}'.format(maker_o.dex.taker_amount):<11} {taker_o.name:<6}"
@@ -509,7 +510,8 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if balance_check('s1', maker_o, taker_o, btc_o):
+            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and \
+                    balance_check('s1', maker_o, taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 maker_o.cex.executed_tobtc_s2, maker_o.cex.final_price_cex_book_s2 = calc_cex_coin1_depth_price(
                     side="asks",
@@ -517,7 +519,8 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
                     orderbook=taker_o.cex.orderbook,
                     qty=maker_o.dex.taker_amount,
                     ccxt_o=ccxt_o)
-                if balance_check('s2', maker_o, taker_o, btc_o):
+                if maker_o.cex.executed_tobtc_s2 and maker_o.cex.final_price_cex_book_s2 and \
+                        balance_check('s2', maker_o, taker_o, btc_o):
                     maker_o.cex.average_price_s2 = maker_o.cex.executed_tobtc_s2 / maker_o.dex.taker_amount
                     msg1_dx = f"{'Xbridge(' + maker_o.name + '/' + taker_o.name + ')':<19}: {'BUY':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'SELL':<5}{'{:.8f}'.format(maker_o.dex.taker_amount):<11} {taker_o.name:<6}"  # {'convert to cex price ' + '{:.8f}'.format(maker_o.dex.taker_amount * coin2_cex_btcrate)}"
                     msg2_s1 = f"{ccxt_o.name + '(' + maker_o.cex.symbol_s1 + ')':<19}: {'SELL':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'BUY':<5}{'{:.8f}'.format(maker_o.cex.executed_tobtc_s1):<11} {'BTC':<4}{'AVG_PRICE:':<11}{'{:.8f}'.format(maker_o.cex.average_price_s1)}"
@@ -547,7 +550,8 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if balance_check('s1', maker_o, taker_o, btc_o):
+            if maker_o.cex.executed_tobtc_s1 and  maker_o.cex.final_price_cex_book_s1 and \
+                    balance_check('s1', maker_o, taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 maker_o.cex.executed_tobtc_s2, maker_o.cex.final_price_cex_book_s2 = calc_cex_coin1_depth_price(
                     side="bids",
@@ -555,7 +559,8 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
                     orderbook=taker_o.cex.orderbook,
                     qty=maker_o.dex.taker_amount,
                     ccxt_o=ccxt_o)
-                if balance_check('s2', maker_o, taker_o, btc_o):
+                if maker_o.cex.executed_tobtc_s2 and maker_o.cex.final_price_cex_book_s2 and \
+                        balance_check('s2', maker_o, taker_o, btc_o):
                     maker_o.cex.average_price_s2 = maker_o.cex.executed_tobtc_s2 / maker_o.dex.taker_amount
                     msg1_dx = f"{'Xbridge(' + maker_o.name + '/' + taker_o.name + ')':<19}: {'SELL':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'BUY':<5}{'{:.8f}'.format(maker_o.dex.taker_amount):<11} {taker_o.name:<6}"
                     msg2_s1 = f"{ccxt_o.name + '(' + maker_o.cex.symbol_s1 + ')':<19}: {'BUY':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'SELL':<5}{'{:.8f}'.format(maker_o.cex.executed_tobtc_s1):<11} {'BTC':<4}{'AVG_PRICE:':<11}{'{:.8f}'.format(maker_o.cex.average_price_s1)}"
