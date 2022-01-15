@@ -21,7 +21,8 @@ def dx_manage_error(error, err_count=0, parent_func=""):
         err_dict = json.loads(err_str)
         if err_dict['code'] == 1026:
             print("err_dict['code'] == 1026, Wallet probably locked ?")
-            if err_count == max_fails:
+            if err_count >= max_fails:
+                print('reach err_count>=max_fails, exit')
                 exit()
         elif err_dict['code'] == 1032:
             print("err_dict['code'] == 1032, Unsupported asset error, blocknet wallet lost contact with network ?")
@@ -33,15 +34,18 @@ def dx_manage_error(error, err_count=0, parent_func=""):
         time.sleep(2 * err_count)
     elif "TypeError" in err_type or "KeyError" in err_type:
         time.sleep(2 * err_count)
-        if err_count > max_fails:
+        if err_count >= max_fails:
+            print('reach err_count>=max_fails, exit')
             exit()
     elif "JSONRPCException" in err_type:
         if "-1: dxLoadXBridgeConf" in err_str:
             print("dxLoadXBridgeConf too fast, sleep", 5 * err_count, "s")
             time.sleep(5 * err_count)
         if err_count >= max_fails:
+            print('reach err_count>=max_fails, exit')
             exit()
     else:
+        print('unreferenced xbridge error, exit')
         exit()
 
 
