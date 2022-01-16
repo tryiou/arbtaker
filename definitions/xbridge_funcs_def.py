@@ -28,6 +28,8 @@ def dx_manage_error(error, err_count=0, parent_func=""):
             print("err_dict['code'] == 1032, Unsupported asset error, blocknet wallet lost contact with network ?")
     elif "ConnectionResetError" in err_type:
         time.sleep(2 * err_count)
+    elif "ConnectionRefusedError" in err_type:
+        time.sleep(2 * err_count)
     elif "RemoteDisconnected" in err_type:
         time.sleep(2 * err_count)
     elif "timeout" in err_type:
