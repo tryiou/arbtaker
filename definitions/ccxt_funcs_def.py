@@ -5,8 +5,8 @@ import time
 
 import ccxt
 
-import definitions.logger as logger
 import arbtaker_settings as settings
+import definitions.logger as logger
 
 ccxt_log = logger.setup_logger(name="CCXT_LOG", log_file='logs/ccxt.log', level=logging.INFO)
 
@@ -55,26 +55,30 @@ def init_ccxt_instance(exchange, hostname=None):
 
 
 def ccxt_manage_error(error, err_count=1):
+    import arbtaker_settings as settings
     err_type = type(error).__name__
-    print(type(error), error, err_type)
-    if (err_type == "NetworkError" or
-            err_type == "DDoSProtection" or
-            err_type == "RateLimitExceeded" or
-            err_type == "InvalidNonce" or
-            err_type == "RequestTimeout" or
-            err_type == "ExchangeNotAvailable" or
-            err_type == "Errno -3" or
-            err_type == "AuthenticationError" or
-            err_type == "Temporary failure in name resolution" or
-            err_type == "ExchangeError" or
-            err_type == "BadResponse"):
-        time.sleep(err_count * 2)
-    # debug
-    # elif err_type == "InsufficientFunds" or "BadSymbol":
-    #     return False
-    # debug
+    print("ccxt_manage_error", type(error), err_type, error)
+    if settings.dry_mode:
+        time.sleep(2 * err_count)
     else:
-        exit()
+        if (err_type == "NetworkError" or
+                err_type == "DDoSProtection" or
+                err_type == "RateLimitExceeded" or
+                err_type == "InvalidNonce" or
+                err_type == "RequestTimeout" or
+                err_type == "ExchangeNotAvailable" or
+                err_type == "Errno -3" or
+                err_type == "AuthenticationError" or
+                err_type == "Temporary failure in name resolution" or
+                err_type == "ExchangeError" or
+                err_type == "BadResponse"):
+            time.sleep(err_count * 2)
+        # debug
+        # elif err_type == "InsufficientFunds" or "BadSymbol":
+        #     return False
+        # debug
+        else:
+            exit()
 
 
 def ccxt_call_fetch_order_book(symbol, ccxt_o, limit=25):
