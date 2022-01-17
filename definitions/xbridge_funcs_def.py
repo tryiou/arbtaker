@@ -12,43 +12,47 @@ debug = 0
 
 
 def dx_manage_error(error, err_count=0, parent_func=""):
+    import arbtaker_settings as settings
     max_fails = 30
     err_type = type(error).__name__
     err_str = str(error)[0:200].replace("'", '"')
     print("dx_manage_error, parent func = ", parent_func, ', [' + err_type + ']', err_str, err_count)
     dx_log.error(parent_func + '[' + err_type + ']: ' + err_str + ', err_count: ' + str(err_count))
-    if "RuntimeError" in err_type:
-        err_dict = json.loads(err_str)
-        if err_dict['code'] == 1026:
-            print("err_dict['code'] == 1026, Wallet probably locked ?")
+    if settings.dry_mode:
+        time.sleep(2 * err_count)
+    else:
+        if "RuntimeError" in err_type:
+            err_dict = json.loads(err_str)
+            if err_dict['code'] == 1026:
+                print("err_dict['code'] == 1026, Wallet probably locked ?")
+                if err_count >= max_fails:
+                    print('reach err_count>=max_fails, exit')
+                    exit()
+            elif err_dict['code'] == 1032:
+                print("err_dict['code'] == 1032, Unsupported asset error, blocknet wallet lost contact with network ?")
+        elif "ConnectionResetError" in err_type:
+            time.sleep(2 * err_count)
+        elif "ConnectionRefusedError" in err_type:
+            time.sleep(2 * err_count)
+        elif "RemoteDisconnected" in err_type:
+            time.sleep(2 * err_count)
+        elif "timeout" in err_type:
+            time.sleep(2 * err_count)
+        elif "TypeError" in err_type or "KeyError" in err_type:
+            time.sleep(2 * err_count)
             if err_count >= max_fails:
                 print('reach err_count>=max_fails, exit')
                 exit()
-        elif err_dict['code'] == 1032:
-            print("err_dict['code'] == 1032, Unsupported asset error, blocknet wallet lost contact with network ?")
-    elif "ConnectionResetError" in err_type:
-        time.sleep(2 * err_count)
-    elif "ConnectionRefusedError" in err_type:
-        time.sleep(2 * err_count)
-    elif "RemoteDisconnected" in err_type:
-        time.sleep(2 * err_count)
-    elif "timeout" in err_type:
-        time.sleep(2 * err_count)
-    elif "TypeError" in err_type or "KeyError" in err_type:
-        time.sleep(2 * err_count)
-        if err_count >= max_fails:
-            print('reach err_count>=max_fails, exit')
+        elif "JSONRPCException" in err_type:
+            if "-1: dxLoadXBridgeConf" in err_str:
+                print("dxLoadXBridgeConf too fast, sleep", 5 * err_count, "s")
+                time.sleep(5 * err_count)
+            if err_count >= max_fails:
+                print('reach err_count>=max_fails, exit')
+                exit()
+        else:
+            print('unreferenced xbridge error, exit')
             exit()
-    elif "JSONRPCException" in err_type:
-        if "-1: dxLoadXBridgeConf" in err_str:
-            print("dxLoadXBridgeConf too fast, sleep", 5 * err_count, "s")
-            time.sleep(5 * err_count)
-        if err_count >= max_fails:
-            print('reach err_count>=max_fails, exit')
-            exit()
-    else:
-        print('unreferenced xbridge error, exit')
-        exit()
 
 
 def dx_call_dxgetlocaltokens():
