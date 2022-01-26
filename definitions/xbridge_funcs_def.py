@@ -2,7 +2,6 @@ import json
 import logging
 import time
 
-import arbtaker_settings
 import definitions.logger as logger
 
 dx_log = logger.setup_logger(name="XBRIDGE_LOG", log_file='logs/xbridge.log', level=logging.INFO)
@@ -23,7 +22,7 @@ def rpc_call(method, params=[], url="http://127.0.0.1", display=True):
     headers = {'Content-type': 'application/json'}
     auth = (config.rpc_user, config.rpc_password)
     response = requests.Session().post(url, json=payload, headers=headers, auth=auth)
-    if arbtaker_settings.debug > 0:
+    if config.debug > 0:
         print("rpc_call(", method, ",", params, ",", url, "):")
         print("response:", response.json()['result'])
     return response.json()['result']
