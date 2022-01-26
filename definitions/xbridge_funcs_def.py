@@ -73,6 +73,7 @@ def dx_manage_error(error, err_count=0, parent_func=""):
 
 
 def dx_call_dxgetlocaltokens():
+    timer_perf = time.time()
     err_count = 0
     while True:
         try:
@@ -82,6 +83,8 @@ def dx_call_dxgetlocaltokens():
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_dxgetlocaltokens")
             time.sleep(err_count)
         else:
+            if debug >= 2:
+                print("dx_call_dxgetlocaltokens(), timer_perf: " + str(time.time() - timer_perf))
             return result
 
 
