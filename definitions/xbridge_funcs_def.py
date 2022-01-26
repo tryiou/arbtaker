@@ -156,7 +156,6 @@ def dx_call_dxflushcancelledorders(flushwindow=0):
     while True:
         try:
             result = rpc_call("dxFlushCancelledOrders", [flushwindow])
-            # result = dxbottools.rpc_connection.dxFlushCancelledOrders(flushwindow)
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_dxflushcancelledorders")
