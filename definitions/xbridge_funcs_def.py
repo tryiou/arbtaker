@@ -2,13 +2,31 @@ import json
 import logging
 import time
 
+import arbtaker_settings
 import definitions.logger as logger
-import utils.dxbottools as dxbottools
 
 dx_log = logger.setup_logger(name="XBRIDGE_LOG", log_file='logs/xbridge.log', level=logging.INFO)
 
 dx_retry_timer = 1
 debug = 0
+
+
+def rpc_call(method, params=[], url="http://127.0.0.1", display=True):
+    import arbtaker_settings as config
+    import requests
+    if config.rpc_port != 80:
+        url = url + ':' + str(config.rpc_port)
+    payload = {"jsonrpc": "2.0",
+               "method": method,
+               "params": params,
+               "id": 0}
+    headers = {'Content-type': 'application/json'}
+    auth = (config.rpc_user, config.rpc_password)
+    response = requests.Session().post(url, json=payload, headers=headers, auth=auth)
+    if arbtaker_settings.debug > 0:
+        print("rpc_call(", method, ",", params, ",", url, "):")
+        print("response:", response.json()['result'])
+    return response.json()['result']
 
 
 def dx_manage_error(error, err_count=0, parent_func=""):
@@ -59,7 +77,7 @@ def dx_call_dxgetlocaltokens():
     err_count = 0
     while True:
         try:
-            result = dxbottools.rpc_connection.dxgetlocaltokens()
+            result = rpc_call("dxGetLocalTokens")
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_dxgetlocaltokens")
@@ -73,7 +91,7 @@ def dx_call_getnewtokenadress(coin):
     err_count = 0
     while True:
         try:
-            result = dxbottools.getnewtokenadress(coin)
+            result = rpc_call("dxGetNewTokenAddress", [coin])
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_getnewtokenadress")
@@ -89,7 +107,7 @@ def dx_call_cancelorder(order_id):
     err_count = 0
     while True:
         try:
-            result = dxbottools.cancelorder(order_id)
+            result = rpc_call("dxCancelOrder", [order_id])
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_cancelorder")
@@ -105,7 +123,7 @@ def dx_call_getorderbook(maker, taker, detail=1):
     err_count = 0
     while True:
         try:
-            result = dxbottools.rpc_connection.dxgetorderbook(detail, maker, taker)
+            result = rpc_call("dxGetOrderBook", [detail, maker, taker])
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_getorderbook")
@@ -121,7 +139,7 @@ def dx_call_getorderstatus(order_id):
     err_count = 0
     while True:
         try:
-            result = dxbottools.getorderstatus(order_id)
+            result = rpc_call("dxGetOrder", [order_id])
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_getorderstatus")
@@ -138,7 +156,8 @@ def dx_call_dxflushcancelledorders(flushwindow=0):
     err_count = 0
     while True:
         try:
-            result = dxbottools.rpc_connection.dxFlushCancelledOrders(flushwindow)
+            result = rpc_call("dxFlushCancelledOrders", [flushwindow])
+            # result = dxbottools.rpc_connection.dxFlushCancelledOrders(flushwindow)
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_dxflushcancelledorders")
@@ -154,7 +173,7 @@ def dx_call_gettokensbalance() -> dict:
     err_count = 0
     while True:
         try:
-            result = dxbottools.rpc_connection.dxGetTokenBalances()
+            result = rpc_call("dxGetTokenBalances")
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_gettokensbalance")
@@ -170,7 +189,7 @@ def dx_call_takeorder(order_id, from_address, to_address):
     err_count = 0
     while True:
         try:
-            result = dxbottools.takeorder(order_id, from_address, to_address)
+            result = rpc_call("dxTakeOrder", [order_id, from_address, to_address])
         except Exception as e:
             err_count += 1
             dx_manage_error(e, err_count=err_count, parent_func="dx_call_makeorder")
