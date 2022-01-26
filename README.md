@@ -26,3 +26,5 @@ start:
 `python3 main.py  `
 
 depending on OS, `pip3/python3` command may be called with `pip/python`
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
