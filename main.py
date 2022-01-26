@@ -1,4 +1,4 @@
-import definitions.arbtaker_def as arb
+import definitions.arbtaker_def
 
 if __name__ == '__main__':
-    arb.main_arb_taker_dx_ccxt()
+    definitions.arbtaker_def.main_arb_taker_dx_ccxt()
