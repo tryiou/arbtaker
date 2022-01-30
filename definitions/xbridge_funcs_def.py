@@ -34,7 +34,8 @@ def dx_manage_error(error, err_count=0, parent_func=""):
     err_type = type(error).__name__
     err_str = str(error)[0:200].replace("'", '"')
     print("dx_manage_error, parent func = ", parent_func, ', [' + err_type + ']', err_str, err_count)
-    dx_log.error("dx_manage_error, ", parent_func + '[' + err_type + ']: ' + err_str + ', err_count: ' + str(err_count))
+    dx_log.error(
+        "dx_manage_error, " + parent_func + '[' + err_type + ']: ' + err_str + ', err_count: ' + str(err_count))
     if settings.dry_mode:
         time.sleep(2 * err_count)
     else:
