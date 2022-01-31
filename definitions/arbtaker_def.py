@@ -32,6 +32,9 @@ class Coin:
             dx_settings_save_new_address(self)
 
     def dx_select_order(self, maker_o, taker_o):
+        self.dex.order = None
+        self.dex.maker_amount = None
+        self.dex.taker_amount = None
         # scout DX orderbook for conform active order, else set all at -1
         orderbook = []
         if "BUY" in self.dex.side:
@@ -155,8 +158,8 @@ class Dex:
         self.balance = 0
         self.order = None
         self.side = ""
-        self.maker_amount = -1
-        self.taker_amount = -1
+        self.maker_amount = None
+        self.taker_amount = None
         self.asks_ob = None
         self.bids_ob = None
         self.active_address = None
@@ -171,8 +174,8 @@ class Dex:
     def reset_order(self):
         self.order = None
         # self.side = ""
-        self.maker_amount = -1
-        self.taker_amount = -1
+        self.maker_amount = None
+        self.taker_amount = None
         self.asks_ob = None
         self.bids_ob = None
 
@@ -252,8 +255,8 @@ def dx_get_active_dx_markets(coins_list=None,
 
 def dx_update_orderbook(maker, taker, detail=3):
     orderbook = xb.dx_call_getorderbook(maker, taker, detail=detail)
-    bids = []
-    asks = []
+    bids = None
+    asks = None
     if 'asks' in orderbook and orderbook['asks']:
         # del orderbook['detail']
         asks = orderbook['asks']
@@ -423,7 +426,7 @@ def calc_arb_direct(maker_o, taker_o, coins_list, ccxt_o):
         maker_o.cex.side_s1 = "SELL"
         maker_o.dx_select_order(maker_o=maker_o,
                                 taker_o=taker_o)
-        if maker_o.dex.maker_amount != -1:
+        if maker_o.dex.maker_amount:
             maker_o.cex.executed_tobtc_s1, maker_o.cex.final_price_cex_book_s1 = calc_cex_coin1_depth_price(side="bids",
                                                                                                             cex_symbol=maker_o.cex.symbol_s1,
                                                                                                             orderbook=maker_o.cex.orderbook,
@@ -458,7 +461,7 @@ def calc_arb_direct(maker_o, taker_o, coins_list, ccxt_o):
         # maker_o.cex.side_s2 = "SELL"
         maker_o.dx_select_order(maker_o=maker_o,
                                 taker_o=taker_o)
-        if maker_o.dex.maker_amount != -1:
+        if maker_o.dex.maker_amount:
             maker_o.cex.executed_tobtc_s1, maker_o.cex.final_price_cex_book_s1 = calc_cex_coin1_depth_price(side="asks",
                                                                                                             cex_symbol=maker_o.cex.symbol_s1,
                                                                                                             orderbook=maker_o.cex.orderbook,
@@ -504,7 +507,7 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
         maker_o.cex.side_s2 = "BUY"
         maker_o.dx_select_order(maker_o=maker_o,
                                 taker_o=taker_o)
-        if maker_o.dex.maker_amount != -1:
+        if maker_o.dex.maker_amount:
             maker_o.cex.executed_tobtc_s1, maker_o.cex.final_price_cex_book_s1 = calc_cex_coin1_depth_price(side="bids",
                                                                                                             cex_symbol=maker_o.cex.symbol_s1,
                                                                                                             orderbook=maker_o.cex.orderbook,
@@ -544,7 +547,7 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
         maker_o.cex.side_s2 = "SELL"
         maker_o.dx_select_order(maker_o=maker_o,
                                 taker_o=taker_o)
-        if maker_o.dex.maker_amount != -1:
+        if maker_o.dex.maker_amount:
             maker_o.cex.executed_tobtc_s1, maker_o.cex.final_price_cex_book_s1 = calc_cex_coin1_depth_price(side="asks",
                                                                                                             cex_symbol=maker_o.cex.symbol_s1,
                                                                                                             orderbook=maker_o.cex.orderbook,
