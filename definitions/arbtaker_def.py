@@ -198,7 +198,7 @@ def update_balances_dx(coins_list):
     dx_bals = xb.dx_call_gettokensbalance()
     for coin in coins_list:  # dx_bals:
         # coin_obj = next((x for x in coins_list if x.name == coin), None)
-        if coin.name in dx_bals:
+        if coin.name and coin.name in dx_bals:
             coin.dex.set_balance(float(dx_bals[coin.name]))
         else:
             print(coin.name, "missing from dex balance")
