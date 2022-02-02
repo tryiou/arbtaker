@@ -195,10 +195,14 @@ def main_init_coins_list():
 
 
 def update_balances_dx(coins_list):
-    dx_bals = xb.dx_call_gettokensbalance()
+    done = False
+    while not done:
+        dx_bals = xb.dx_call_gettokensbalance()
+        if dx_bals:
+            done = True
     for coin in coins_list:  # dx_bals:
         # coin_obj = next((x for x in coins_list if x.name == coin), None)
-        if dx_bals and coin.name in dx_bals:
+        if coin.name in dx_bals:
             coin.dex.set_balance(float(dx_bals[coin.name]))
         else:
             print(coin.name, "missing from dex balance")
@@ -467,7 +471,8 @@ def calc_arb_direct(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and balance_check('s1', maker_o, taker_o, btc_o):
+            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and balance_check('s1', maker_o,
+                                                                                                       taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 profit_percent = maker_o.dex.taker_amount / maker_o.cex.executed_tobtc_s1
                 msg1_dx = f"{' ' * 10}{'Xbridge(' + maker_o.name + '/' + taker_o.name + ')':<19}: {'SELL':<5}{'{:.8f}'.format(maker_o.dex.maker_amount):<13} {maker_o.name:<6}{'BUY':<5}{'{:.8f}'.format(maker_o.dex.taker_amount):<11} {taker_o.name:<6}"
@@ -553,7 +558,7 @@ def calc_arb_triway(maker_o, taker_o, coins_list, ccxt_o):
                                                                                                             orderbook=maker_o.cex.orderbook,
                                                                                                             qty=maker_o.dex.maker_amount,
                                                                                                             ccxt_o=ccxt_o)
-            if maker_o.cex.executed_tobtc_s1 and  maker_o.cex.final_price_cex_book_s1 and \
+            if maker_o.cex.executed_tobtc_s1 and maker_o.cex.final_price_cex_book_s1 and \
                     balance_check('s1', maker_o, taker_o, btc_o):
                 maker_o.cex.average_price_s1 = maker_o.cex.executed_tobtc_s1 / maker_o.dex.maker_amount
                 maker_o.cex.executed_tobtc_s2, maker_o.cex.final_price_cex_book_s2 = calc_cex_coin1_depth_price(
